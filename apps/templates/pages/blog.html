@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-content">
+            <h1>{{ blog.title }}</h1>
+            <span>Author: {{ users[blog.id].firstName }} {{ users[blog.id].lastName }}</span>
+            <span class="right">{{ blog.dt.date() }}</span>
+            <p>{{ blog.content }}</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            {% if current_user.id %}
+                <form class="col s12" name="commentForm" method="post">
+                    <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="comment" class="materialize-textarea" name="comment"></textarea>
+                        <label for="comment">Comment</label>
+                    </div>
+                    </div>
+                <a class="waves-effect waves-light btn" onclick="submit()">Submit</a>
+                </form>
+            {% else %}
+                Login to comment
+            {% endif %}
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            {% for comment in comments %}
+            <div>
+            <b>{{ users[comment.user].firstName }} {{ users[comment.user].lastName }}: </b>
+            <span>{{ comment.comment }}</span>
+        </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+    function submit() {
+        if (document.commentForm.checkValidity()){
+            document.commentForm.submit()
+        } else {
+            document.commentForm.reportValidity()
+        }
+    }
+</script>
+{% endblock %}
